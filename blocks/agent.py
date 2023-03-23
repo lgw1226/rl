@@ -6,6 +6,7 @@ import torch
 import torch.cuda as cuda
 
 import gymnasium as gym
+from gymnasium.spaces import Box, Discrete
 
 
 # cuda
@@ -14,10 +15,12 @@ device = 'cuda' if cuda.is_available() else 'cpu'
 
 class Agent():
     """
-    The most basic agent class which all the other agents inherit.
+    The most basic class which all the other agents inherit.
 
     Attributes
     ----------
+    self.name : str
+        Name of the agent
     self.ob_space : gym.spaces.Box
         Observation space of the environment
     self.ac_space : gym.spaces.Box | gym.spaces.Discrete
@@ -30,19 +33,17 @@ class Agent():
         Dimension of the action space
     self.n_ac : int | None
         The number of actions the agent can choose - only when is_discrete True
-    self.name : str
-        Name of the agent
 
     Methods
     -------
-        __repr__()
-            Returns summary of the agent information
-        get_ac()
-            Samples and returns random action
+    __repr__()
+        Return summary of the agent information
+    get_ac()
+        Sample and return random action
     """
     def __init__(self,
-                 ob_space: gym.spaces.Box,
-                 ac_space: Union[gym.spaces.Box, gym.spaces.Discrete]
+                 ob_space: Box,
+                 ac_space: Union[Box, Discrete]
                  ) -> None:        
         """
         Parameters
@@ -52,11 +53,13 @@ class Agent():
         ac_space : gym.spaces.Box | gym.spaces.Discrete
             Action space of the environment
         """
+
+        self.name = "Agent"
         
         self.ob_space = ob_space
         self.ac_space = ac_space
 
-        self.is_discrete = (type(self.ac_space) == gym.spaces.Discrete)
+        self.is_discrete = (type(self.ac_space) == Discrete)
 
         self.dim_ob = self.ob_space.shape[0]
         
@@ -67,11 +70,9 @@ class Agent():
             self.dim_ac = self.ac_space.shape[0]
             self.n_ac = None
 
-        self.name = "Agent"
-
     def __repr__(self) -> str:
-        """Returns summary of the agent information."""
-        ret_str = f"Name: {self.name}, Discrete: {self.is_discrete}"
+        """Return summary of the agent information."""
+        ret_str = f"Agent Name: {self.name}, Discrete: {self.is_discrete}"
 
         if self.is_discrete:
             ret_str += f", No. of Actions: {self.n_ac}"
@@ -82,7 +83,7 @@ class Agent():
 
     def get_ac(self) -> torch.Tensor:
         """
-        Samples and returns random action.
+        Sample and return random action.
         
         Returns
         -------
