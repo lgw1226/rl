@@ -9,5 +9,6 @@ def tensor_shape_test():
     print(f"t_a: {t_a}\nt_b: {t_b}\nt_c: {t_c}")
     print(f"t_a.shape: {t_a.shape}\nt_b.shape: {t_b.shape}\nt_c.shape: {t_c.shape}")
 
+
 if __name__ == "__main__":
     tensor_shape_test()

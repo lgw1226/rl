@@ -105,10 +105,10 @@ class Environment():
 
         Returns
         -------
-        tuple
-            tensor(ob) -> shape `[self.dim_ob]`
-            tensor([rwd]) -> shape `[1]`
-            tensor([done]) -> shape `[1]` (0 or 1)
+        tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+            - tensor(ob) -> shape `[self.dim_ob]`
+            - tensor([rwd]) -> shape `[1]`
+            - tensor([done]) -> shape `[1]` (0 or 1)
         """
         if self.is_discrete: ac = ac.item()
 
