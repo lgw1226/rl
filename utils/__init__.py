@@ -1,4 +1,4 @@
-from utils.util_functions import (
+from utils.functional import (
     plot_returns,
     save_nn,
     load_nn,
@@ -6,4 +6,4 @@ from utils.util_functions import (
     tuple_of_tensors_to_tensor
 )
 
-from utils.util_classes import LogDirs
+from utils.logdirs import LogDirs
