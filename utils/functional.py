@@ -1,5 +1,8 @@
 """Include utility functions for RL algorithms."""
 
+import sys; sys.path.append('./')
+
+from itertools import count
 from typing import Tuple
 
 import torch
@@ -7,7 +10,32 @@ import torch.nn as nn
 
 import matplotlib.pyplot as plt
 
-from moviepy.editor import VideoFileClip
+from blocks import Agent, Environment
+
+
+def test(agent: Agent,
+         environment: Environment,
+         n_episode: int = 1
+         ) -> torch.Tensor:
+    """Test agent, return average return per episode."""
+    
+    environment.reset()
+    total_rwd = 0
+    
+    for _ in range(n_episode):  # for each episode
+
+        for _ in count():  # for each timestep
+
+            ac = agent.get_ac()
+            _, rwd, done = environment.step(ac)
+
+            total_rwd += rwd
+
+            if done:
+                environment.reset()
+                break
+
+    return total_rwd / n_episode
 
 def plot_returns(epoch_returns: torch.Tensor,
                  show_result: bool = False
@@ -45,55 +73,6 @@ def plot_returns(epoch_returns: torch.Tensor,
         plt.plot(means.numpy())
     
     plt.pause(0.01)
-
-def save_nn(neural_net: nn.Module, save_path: str, filename : str):
-    """
-    Save neural network parameters to the given path.
-
-    Parameters
-    ----------
-    neural_net : nn.Module
-        Neural network whose parameters (state_dict) are saved
-    save_path : str
-        Path to save parameters to
-    filename : str
-        Name of the file to save
-    """
-
-    torch.save(neural_net.state_dict(), save_path + filename + '.pt')
-
-def load_nn(neural_net: nn.Module, load_path : str, filename : str):
-    """
-    Load neural network parameters from the given path.
-
-    Parameters
-    ----------
-    neural_net : nn.Module
-        Neural network whose parameters (state_dict) are loaded
-    save_path : str
-        Path to load parameters from
-    filename : str
-        Name of the file to load
-    """
-
-    neural_net.load_state_dict(torch.load(load_path + filename + '.pt'))
-
-def mp4_to_gif(mp4_path: str, gif_path: str, filename: str):
-    """
-    Convert .mp4 to .gif.
-
-    Parameters
-    ----------
-    mp4_path : str
-        Path to .mp4 file which is converted
-    gif_path : str
-        Path to save result .gif file
-    filename : str
-        Same for both .mp4 and .gif files
-    """
-
-    video_clip = VideoFileClip(mp4_path + filename + '.mp4')
-    video_clip.write_gif(gif_path + filename + '.gif')
 
 def tuple_of_tensors_to_tensor(tuple_of_tensors: Tuple[torch.Tensor, ...]
                                ) -> torch.Tensor:
