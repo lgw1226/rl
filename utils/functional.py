@@ -19,20 +19,20 @@ def test(agent: Agent,
          ) -> torch.Tensor:
     """Test agent, return average return per episode."""
     
-    environment.reset()
+    ob = environment.reset()
     total_rwd = 0
     
     for _ in range(n_episode):  # for each episode
 
         for _ in count():  # for each timestep
 
-            ac = agent.get_ac()
-            _, rwd, done = environment.step(ac)
+            ac = agent.get_ac(ob)
+            ob, rwd, done = environment.step(ac)
 
             total_rwd += rwd
 
             if done:
-                environment.reset()
+                ob = environment.reset()
                 break
 
     return total_rwd / n_episode
